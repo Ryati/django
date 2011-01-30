@@ -12,6 +12,8 @@ class GZipMiddleware(object):
     on the Accept-Encoding header.
     """
     def process_response(self, request, response):
+        if getattr(response,"skip_gzip",False):
+            return response
         # It's not worth compressing non-OK or really short responses.
         if response.status_code != 200 or len(response.content) < 200:
             return response
